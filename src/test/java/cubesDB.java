@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.Scanner;
-
+ 
 public class cubesDB {
 
 static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
