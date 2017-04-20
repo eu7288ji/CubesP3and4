@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.Scanner;
- 
+
 public class cubesDB {
 
 static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -16,7 +16,7 @@ static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
             while (true) {
                 ArrayList<String> name = new ArrayList<>();
                 ArrayList<Double> time = new ArrayList<>();
-                String newEntry = getString("Want to add a new entry? Enter 'Y' for yes, 'N' for no.");
+                String newEntry = getString("Enter 'Y' to add entry, 'N' for update.");
                 if (newEntry.equalsIgnoreCase("y")) {
                     String newName = getString("What was the name of the Cube Solver?");
                     Double newDouble = getDouble("What was their best time?");
@@ -24,7 +24,8 @@ static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
                     name.add(newName);
                     time.add(newDouble);
 
-                    String prep = "Insert into cube values (? , ?)";
+                    String prep = "Insert into cubes values (? , ?)";
+
 
                     PreparedStatement insert = connection.prepareStatement(prep);
                     insert.setString(1, newName);
@@ -33,8 +34,26 @@ static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 
                 } else if (newEntry.equalsIgnoreCase("n"));
                 {
-                    return;
+                    String newUpdate = getString("Would you like to update? Y or N");
+
+                    if (newUpdate.equalsIgnoreCase("y")) {
+
+
+                        String upd = "UPDATE cubes SET how_long = ? WHERE cube_solver = ?";
+
+                        String newNameUpdate = getString("What name would you like to enter?");
+                        Double newTimeUpdate = getDouble("What new time would you like to enter?");
+
+                        PreparedStatement update = connection.prepareStatement(upd);
+                        update.setDouble(1, newTimeUpdate);
+                        update.setString(2, newNameUpdate);
+                        update.executeUpdate();
+                    }
+                    else {
+                        return;
+                    }
                 }
+
             }
         } catch (SQLDataException sqle) {
             System.out.println("Error with the query.");
@@ -60,8 +79,8 @@ static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
         try (Connection conn = DriverManager.getConnection(DB_CONNECTION_URL, USER, PASSWORD);
                 Statement statement = conn.createStatement()){
 
-            String refresh = "Drop table cubes";
-            statement.executeUpdate(refresh);
+            //String refresh = "Drop table cubes";
+           // statement.executeUpdate(refresh);
 
             cubes.addEntry(conn);
 
